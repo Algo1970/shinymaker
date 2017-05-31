@@ -492,26 +492,7 @@ server <- function(input,output){
       servercode <- "File does not exist"
     }
   })
-  # output$comment_copyui <- renderText({
-  #   input$copy_uicode
-  #   if("ui.R" %in% list.files(getwd())){
-  #     uicode <- readLines("ui.R")
-  #     write_clip(uicode)
-  #     text <- 'done'
-  #   } else {
-  #     text <- "File does not exist"
-  #   }
-  # })
-  # output$comment_copyserver <- renderText({
-  #   input$copy_servercode
-  #   if("server.R" %in% list.files(getwd())){
-  #     servercode <- readLines("server.R")
-  #     write_clip(servercode)
-  #     text <- 'done'
-  #   } else {
-  #     text <- "File does not exist"
-  #   }
-  # })
+
 }
 
 # shinyApp----
