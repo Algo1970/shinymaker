@@ -1,0 +1,76 @@
+"contentsName","contentsText"
+"server.checkbox","output$txt <- renderText({
+icons <- paste(input$icons,collapse = "", "");paste(""You chose"", icons)
+})"
+"server.fileinput","output$contents <- renderTable({
+inFile <- input$file1
+if (is.null(inFile))
+return(NULL)
+read.csv(inFile$datapath, header = input$header)
+})"
+"server.numericinput","output$value <- renderText({
+input$obs1 
+})"
+"server.radiobutton"," output$txt2 <- renderText({
+paste(""You chose"", input$rb)
+})"
+"server.sliderinput","output$distPlot <- renderPlot({
+hist(rnorm(input$obs))
+})"
+"server.selectinput"," output$result <- renderText({
+paste(""You chose"", input$state)
+})"
+"server.actionbutton","comment_save <- eventReactive(input$save,{
+cat(""saveButton was pushed""
+)})
+output$comment_button <- renderText({
+comment_save()
+})"
+"server.ggplot","output$ggplot <- renderPlot({
+ggplot(iris,aes(Sepal.Width,Sepal.Length))+geom_point()
+})"
+"server.plotly","output$plotly <- renderPlotly({
+plot_ly(z=volcano,type=""heatmap"")
+})"
+"server.image","output$myImages <- renderImage({
+if(!(""rlogo.png"" %in% list.files(getwd()))){
+image_read(""https://www.r-project.org/logo/Rlogo.png"") %>% image_write(""rlogo.png"")
+}
+list(src = ""rlogo.png"",filetype = ""image/png"",width = 300,height = 300,alt = ""This is alternate text"")}, deleteFile = FALSE)"
+"server.leaflet","output$mymap <- renderLeaflet({
+leaflet() %>% 
+addProviderTiles(providers$Stamen.TonerLite,options = providerTileOptions(noWrap = TRUE))} %>% 
+addMiniMap(tiles = providers$Esri.WorldStreetMap,toggleDisplay = TRUE))"
+"server.clickimage","output$myImage <- renderImage({
+if(""ebi_miso.JPG"" %in% list.files(getwd())){
+list(src = ""ebi_miso.JPG"",
+filetype = ""image/jpeg"",
+width = 400,
+height = 300,
+alt = ""ramen"")
+}
+}, deleteFile = FALSE)
+output$info <- renderText({
+paste0(""x="",input$image_click$x,""y="",input$image_click$y)
+})"
+"server.clickplot","output$plot1 <- renderPlot({
+ggplot(iris,aes(Sepal.Width,Sepal.Length))+geom_point()
+})
+output$info2 <- renderText({
+paste0(""x="", input$plot_click$x, ""
+y="", input$plot_click$y)
+})"
+"server.diagram","output$diagram <- renderGrViz({
+nodes <-create_nodes(nodes = 1:3)
+edges <-create_edges(from = 1:3,to = c(2,3,1))
+graph <-create_graph(nodes_df = nodes,edges_df = edges)
+grViz({graph$dot_code})})"
+"server.visnet","output$network <- renderVisNetwork({
+nodes <- data.frame(id = 1:3,label=1:3)
+edges <- data.frame(from = c(1,2,3), to = c(2,3,1))
+visNetwork(nodes, edges)})"
+"server.verbatimtext","output$verba_text <- renderText({
+text <- ""sample text""
+})"
+"server.datatable","output$DT1 <- renderDataTable({
+head(iris[,c(1,2)],3) },options = list(pageLength = 5,searching = T))"

@@ -1,75 +1,34 @@
 # shinymaker
 
-print(sessionInfo())
 
 # library----
 library(shiny)
 library(shinythemes)
 library(dplyr)
-library(clipr)
 
-# library.list
-lib <- c("shiny",
-         "shinythemes",
-         "dplyr",
-         "ggplot2",
-         "plotly",
-         "visNetwork",
-         "DT",
-         "DiagrammeR",
-         "gridExtra",
-         "magick",
-         "EBImage",
-         "RMySQL",
-         "RPostgreSQL",
-         "RODBC",
-         "leaflet",
-         "ggmap",
-         "rvest")
-n <- 1:length(lib)
-names(n) <- lib
-choices1 <- as.list(n)
-# write.csv(data.frame(number=n,libraryName=lib),file = "libraryList.csv", row.names=FALSE)
+# library.list----
+libraryList <- read.csv("libraryList.csv", header = T) %>% as.list() 
+names(libraryList$number) <- libraryList$libraryName
+libraryChoices <- libraryList$number %>% as.list()
 
-# contents.list
-contents <- c("textInput",
-              "radioButtons",
-              "numericInput",
-              "sliderInput",
-              "selectInput",
-              "dateInput",
-              "dateRangeInput",
-              "fileInput",
-              "actionButton",
-              "checkboxGroupInput")
-n <- 1:length(contents)
-names(n) <- contents
-choices2 <- as.list(n)
-# write.csv(data.frame(number=n,contents=contents),file = "InputContents.csv", row.names=FALSE)
+# inputContents.list----
+inputContents <- read.csv("inputContents.csv", header = T) %>% as.list() 
+names(inputContents$number) <- inputContents$contents
+inputContentsChoices <- inputContents$number %>% as.list()
 
-contents2 <- c("ggplot2",
-               "plotly",
-               "renderImage",
-               "leaflet",
-               "click_image",
-               "click_plot",
-               "DiagrammeR",
-               "visNetwork",
-               "verbatimTextOutput",
-               "dataTableOutput")
-n <- 1:length(contents2)
-names(n) <- contents2
-choices3 <- as.list(n)
-# write.csv(data.frame(number=n,contents=contents2),file = "outputContents.csv", row.names=FALSE)
-
+# outputContents.list----
+outputContents <- read.csv("outputContents.csv", header = T) %>% as.list() 
+names(outputContents$number) <- outputContents$contents
+outputContentsChoices <- outputContents$number %>% as.list()
+outputContentsChoices
 
 # ui----
 ui <- fluidPage(shinythemes::themeSelector(),
-                titlePanel("shinymaker"),
+                titlePanel("ShinyMaker"),
                 fluidRow(
                   column(2,h3("Frame"),
-                         textInput("title", label=h5("title:"),value=""),
-                         radioButtons("sidedisable", label = h5("Sidebar :"),
+                         textInput("title", label=h5("title:"),value="sample"),
+                         radioButtons("sidebar", label = h5("Sidebar :"),
                                       choices = list("yes"  =1,
                                                      "no"   =2),selected = 2),
                          radioButtons("tab", label = h5("Tab :"),
@@ -77,7 +36,7 @@ ui <- fluidPage(shinythemes::themeSelector(),
                                                      "no"   =2),selected = 2)
                   ),
                   column(2,
-                         radioButtons("theme", label = h3("Theme:"),
+                         radioButtons("theme", label = h3("Theme :"),
                                       choices = list("default"  =1,
                                                      "cerulean" =2,
                                                      "cosmo"    =3,
@@ -98,27 +57,22 @@ ui <- fluidPage(shinythemes::themeSelector(),
                   ),
                   column(2,
                          checkboxGroupInput("library_list", label = h3("Libraries"), 
-                                            choices = choices1,
+                                            choices = libraryChoices,
                                             selected = c(1,2,3,4,6,8))
                   ),
                   column(3,
-                         checkboxGroupInput("contents_list", label = h3("Input UI contents"), 
-                                            choices = choices2,
+                         checkboxGroupInput("contents_list", label = h3("Input contents"), 
+                                            choices = inputContentsChoices,
                                             selected = 1)
                   ),
                   column(3,
                          checkboxGroupInput("contents_list2", label = h3("Output contents"), 
-                                            choices = choices3,
+                                            choices = outputContentsChoices,
                                             selected = 1),
                          actionButton("save_shiny","make shinycode"),
                          verbatimTextOutput("comment1"),
                          h5(),
-                         actionButton("confirm_code","display code")#,
-                         # h5(),
-                         # actionButton("copy_uicode","copy UI code"),
-                         # verbatimTextOutput("comment_copyui"),
-                         # actionButton("copy_servercode","copy Server code"),
-                         # verbatimTextOutput("comment_copyserver")
+                         actionButton("confirm_code","display code")
                   ),
                   
                   column(12,
@@ -133,28 +87,20 @@ ui <- fluidPage(shinythemes::themeSelector(),
 # ui.contents----
 comma <- ','
 
-ui.textinput <- 'column(4,\ntextInput("title", label="title",value="")\n)'
-ui.checkbox <- 'column(4,\ncheckboxGroupInput("icons", "Choose icons:",\nchoiceNames=list(icon("calendar"),icon("bed")),\nchoiceValues=list("calendar","bed")),\ntextOutput("txt")\n)'
-ui.dateinput <- 'column(4,\ndateInput("date2", "Date:"))'
-ui.daterangeinput <- 'column(4,\ndateRangeInput("daterange4", "Date range:",start = Sys.Date()-10,end = Sys.Date()+10)\n)'
-ui.fileinput <- 'column(4,\nfileInput("file",label = "Input File:"),\ntableOutput("contents")\n)'
-ui.numericinput <- 'column(4,\nnumericInput("obs1", "Obs:", 10, min = 1, max = 100),\nverbatimTextOutput("value")\n)'
-ui.radiobutton <- 'column(4,\nradioButtons("rb", "Choose one:", c("A" = "1","B" = "2","C" = "3")\n),\ntextOutput("txt2")\n)'
-ui.sliderinput <- 'column(4,\nsliderInput("obs", "Number of observations:",min = 0, max = 1000, value = 500),\nplotOutput("distPlot",height = 150)\n)'
-ui.selectinput <- 'column(4,\nselectInput("moji","Choose:",list(`group1`=c("A","B","C"),`group2`=c("D","E","F"))),\ntextOutput("result")\n)'
-ui.actionbutton <- 'column(4,\nactionButton("save","save data"),\nverbatimTextOutput("comment_button")\n)'
-ui.tab <- 'column(4,\ntabsetPanel(\ntabPanel("tabA",h3("testA")),\ntabPanel("tabB",h3("testB"))\n)\n)'
+substituteUItext <- function(objectName,codeText){
+  substituteText <- paste0(objectName,"<<-'column(4,\n",codeText,"\n)'")
+  # print(substituteText)
+  eval(parse(text = substituteText))
+}
+UIContentsCode <- read.csv("UIContentsCode.csv", header = T)
+mapply(substituteUItext,UIContentsCode$contentsName,UIContentsCode$contentsText)
 
-ui.plotly <- 'column(4,\nplotlyOutput("plotly")\n)'
-ui.ggplot <- 'column(4,\nplotOutput("ggplot",height=200)\n)'
-ui.image <- 'column(4,\nimageOutput("myImages")\n)'
-ui.leaflet <- 'column(4,\nleafletOutput("mymap")\n)'
-ui.clickimage <- 'column(4,\nimageOutput("myImage",click = "image_click"),\nverbatimTextOutput("info")\n)'
-ui.clickplot <- 'column(4,\nplotOutput("plot1",click ="plot_click"),\nverbatimTextOutput("info2")\n)'
-ui.diagram <- 'column(4,\ngrVizOutput("diagram",width ="100%",height="300px")\n)'
-ui.visnet <- 'column(4,\nvisNetworkOutput("network")\n)'
-ui.verbatimtext <- 'column(4,\nverbatimTextOutput("verba_text")\n)'
-ui.datatable <- 'column(4,\ndataTableOutput("DT1")\n)'
+substituteServertext <- function(objectName,codeText){
+  substituteText <- paste0(objectName,"<<-'",codeText,"\n)'")
+  # print(substituteText)
+  eval(parse(text = substituteText))
+}
+
 
 # make servercode----
 server.h <- '\n# server----\nshinyServer(\nfunction(input, output) { '
@@ -183,7 +129,7 @@ server.verbatimtext <- 'output$verba_text <- renderText({\ntext <- "sample text"
 server.datatable <- 'output$DT1 <- renderDataTable({\nhead(iris[,c(1,2)],3) },options = list(pageLength = 5,searching = T))'
 
 # shiny.app----
-code.shinyapp <- '\nshinyApp(ui = ui, server = server)'
+# code.shinyapp <- '\nshinyApp(ui = ui, server = server)'
 
 # server----
 server <- function(input,output){
@@ -232,11 +178,11 @@ server <- function(input,output){
     ui.pagebody.t2 <- '))\n)\n)'
     
     # sidebar
-    if(input$sidedisable==2){
+    if(input$sidebar==2){
       # no
       ui.pagebody.h <- ui.pagebody.h1
       ui.pagebody.t <- ui.pagebody.t1
-    } else if(input$sidedisable==1){
+    } else if(input$sidebar==1){
       # yes
       ui.pagebody.h <- ui.pagebody.h2
       ui.pagebody.t <- ui.pagebody.t2
@@ -466,11 +412,15 @@ server <- function(input,output){
     
     # make whole code----
     # record shiny execute file---
+    
+    if(!("sample" %in% list.files(getwd()))){
+      dir.create(paste0(getwd(),"/sample"))
+    }
     code.UI <- c(codelib,code.ui)
-    write(code.UI,file = "ui.R")
+    write(code.UI,file = "sample/ui.R")
     code.server <- c(codelib,code.server)
-    write(code.server,file = "server.R")
-    text <- 'shiny_template code was created '
+    write(code.server,file = "sample/server.R")
+    text <- 'Shiny_code was created. '
   })
   output$comment1 <- renderText({
     comment1()
@@ -480,8 +430,8 @@ server <- function(input,output){
   })
   output$uicode <- renderText({
     input$confirm_code
-    if("ui.R" %in% list.files(getwd())){
-      uicode <- readLines("ui.R")
+    if("ui.R" %in% list.files(paste0(getwd(),"/sample"))){
+      uicode <- readLines("sample/ui.R")
       unicode <- paste(uicode, collapse = "\n")
     } else {
       uicode <- "File does not exist"
@@ -489,14 +439,14 @@ server <- function(input,output){
   })
   output$servercode <- renderText({
     input$confirm_code
-    if("server.R" %in% list.files(getwd())){
-      servercode <- readLines("server.R")
+    if("server.R" %in% list.files(paste0(getwd(),"/sample"))){
+      servercode <- readLines("sample/server.R")
       servercode <- paste(servercode, collapse = "\n")
     } else {
       servercode <- "File does not exist"
     }
   })
-
+  
 }
 
 # shinyApp----
