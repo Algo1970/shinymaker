@@ -1,7 +1,6 @@
 # shinymaker
 
-
-# library----
+# LIBRARY----
 library(shiny)
 library(shinythemes)
 library(dplyr)
@@ -22,7 +21,7 @@ names(outputContents$number) <- outputContents$contents
 outputContentsChoices <- outputContents$number %>% as.list()
 outputContentsChoices
 
-# ui----
+# UI----
 ui <- fluidPage(shinythemes::themeSelector(),
                 titlePanel("ShinyMaker"),
                 fluidRow(
@@ -61,12 +60,12 @@ ui <- fluidPage(shinythemes::themeSelector(),
                                             selected = c(1,2,3,4,6,8))
                   ),
                   column(3,
-                         checkboxGroupInput("contents_list", label = h3("Input contents"), 
+                         checkboxGroupInput("inputContentsList", label = h3("Input contents"), 
                                             choices = inputContentsChoices,
                                             selected = 1)
                   ),
                   column(3,
-                         checkboxGroupInput("contents_list2", label = h3("Output contents"), 
+                         checkboxGroupInput("ouputContentsList", label = h3("Output contents"), 
                                             choices = outputContentsChoices,
                                             selected = 1),
                          actionButton("save_shiny","make shinycode"),
@@ -84,70 +83,44 @@ ui <- fluidPage(shinythemes::themeSelector(),
                 )
 )
 
+# UI/SERVEER contents data----
 # ui.contents----
-comma <- ','
-
-substituteUItext <- function(objectName,codeText){
-  substituteText <- paste0(objectName,"<<-'column(4,\n",codeText,"\n)'")
-  # print(substituteText)
-  eval(parse(text = substituteText))
-}
+# substituteUItext <- function(objectName,codeText){
+#   substituteText <- paste0(objectName,"<<-'column(4,\n",codeText,"\n)'")
+#   eval(parse(text = substituteText))
+# }
 UIContentsCode <- read.csv("UIContentsCode.csv", header = T)
-mapply(substituteUItext,UIContentsCode$contentsName,UIContentsCode$contentsText)
+# mapply(substituteUItext,UIContentsCode$contentsName,UIContentsCode$contentsText)
+# 
+# # server.contents----
+# substituteServertext <- function(objectName,codeText){
+#   substituteText <- paste0(objectName,"<<-'",codeText,"\n)'")
+#   eval(parse(text = substituteText))
+# }
+ServerContentsCode <- read.csv("ServerContentsCode.csv", header = T)
+# mapply(substituteServertext,ServerContentsCode$contentsName,ServerContentsCode$contentsText)
 
-substituteServertext <- function(objectName,codeText){
-  substituteText <- paste0(objectName,"<<-'",codeText,"\n)'")
-  # print(substituteText)
-  eval(parse(text = substituteText))
-}
 
-
-# make servercode----
-server.h <- '\n# server----\nshinyServer(\nfunction(input, output) { '
-server.h2 <- '\n# server----\nshinyServer(\nfunction(input, output, session) { '
-server.t <- '}\n)'
-
-# server.contents----
-server.checkbox <- 'output$txt <- renderText({\nicons <- paste(input$icons,collapse = ", ");paste("You chose", icons)\n})'
-server.fileinput <- 'output$contents <- renderTable({\ninFile <- input$file1\nif (is.null(inFile))\nreturn(NULL)\nread.csv(inFile$datapath, header = input$header)\n})'
-server.numericinput <- 'output$value <- renderText({\ninput$obs1 \n})'
-server.radiobutton <- ' output$txt2 <- renderText({\npaste("You chose", input$rb)\n})'
-server.sliderinput <- 'output$distPlot <- renderPlot({\nhist(rnorm(input$obs))\n})'
-server.selectinput <- ' output$result <- renderText({\npaste("You chose", input$state)\n})'
-server.actionbutton <- 'comment_save <- eventReactive(input$save,{\ncat("saveButton was pushed"\n)})\noutput$comment_button <- renderText({\ncomment_save()\n})'
-
-server.ggplot <- 'output$ggplot <- renderPlot({\nggplot(iris,aes(Sepal.Width,Sepal.Length))+geom_point()\n})'
-server.plotly <- 'output$plotly <- renderPlotly({\nplot_ly(z=volcano,type="heatmap")\n})'
-server.image <- 'output$myImages <- renderImage({\nif(!("rlogo.png" %in% list.files(getwd()))){\nimage_read("https://www.r-project.org/logo/Rlogo.png") %>% image_write("rlogo.png")\n}\nlist(src = "rlogo.png",filetype = "image/png",width = 300,height = 300,alt = "This is alternate text")}, deleteFile = FALSE)'
-server.leaflet <- 'output$mymap <- renderLeaflet({\nleaflet() %>% \naddProviderTiles(providers$Stamen.TonerLite,options = providerTileOptions(noWrap = TRUE))} %>% \naddMiniMap(tiles = providers$Esri.WorldStreetMap,toggleDisplay = TRUE))'
-server.clickimage <- 'output$myImage <- renderImage({\nif("ebi_miso.JPG" %in% list.files(getwd())){\nlist(src = "ebi_miso.JPG",\nfiletype = "image/jpeg",\nwidth = 400,\nheight = 300,\nalt = "ramen")\n}\n}, deleteFile = FALSE)\noutput$info <- renderText({\npaste0("x=",input$image_click$x,"y=",input$image_click$y)\n})'
-server.clickplot <- 'output$plot1 <- renderPlot({\nggplot(iris,aes(Sepal.Width,Sepal.Length))+geom_point()\n})
-output$info2 <- renderText({\npaste0("x=", input$plot_click$x, "\ny=", input$plot_click$y)\n})'
-server.diagram <- 'output$diagram <- renderGrViz({\nnodes <-create_nodes(nodes = 1:3)\nedges <-create_edges(from = 1:3,to = c(2,3,1))\ngraph <-create_graph(nodes_df = nodes,edges_df = edges)\ngrViz({graph$dot_code})})'
-server.visnet <- 'output$network <- renderVisNetwork({\nnodes <- data.frame(id = 1:3,label=1:3)\nedges <- data.frame(from = c(1,2,3), to = c(2,3,1))\nvisNetwork(nodes, edges)})'
-server.verbatimtext <- 'output$verba_text <- renderText({\ntext <- "sample text"\n})'
-server.datatable <- 'output$DT1 <- renderDataTable({\nhead(iris[,c(1,2)],3) },options = list(pageLength = 5,searching = T))'
-
-# shiny.app----
-# code.shinyapp <- '\nshinyApp(ui = ui, server = server)'
-
-# server----
+# SERVER----
 server <- function(input,output){
   comment1 <- eventReactive(input$save_shiny,{
     
-    # library code----
-    lib_txt <- vector()
-    lib_txt[1] <- '\n# library----'
-    for(i in seq_along(lib)){
-      lib_txt[i+1] <- paste0('library(',lib[i],')')
+    # library.part of shiny.code----
+    libraryCommnetCode <- '\n# library----'
+    makeLibraryCode <- function(libraryList){
+      paste0('library(',libraryList,')')
     }
-    code.library <- paste0(lib_txt)
-    n_list <- as.numeric(input$library_list)+1
-    codelib <- code.library[n_list]
+    libraryCode <- sapply(libraryList$libraryName,makeLibraryCode)
+    neededLibraryNumber <- as.numeric(input$library_list)
+    libraryCode <- libraryCode[neededLibraryNumber]
+    libraryCode <- c(libraryCommnetCode,libraryCode)
     
-    # ui code----
+    # ui.part of shiny.code----
+    shinyUI.head <- '\n# ui----\nshinyUI(\n'
+    shinyUI.tail <- '\n)'
+    
     if(input$theme==1){
-      ui.fluidpage.h <- paste0('\n# ui----\nshinyUI(\nfluidPage(')
+      ui.fluidpage.h <- 'fluidPage('
     } else{
       switch(input$theme,
              # "1"= stheme <- "default",  # default doesn't work
@@ -168,247 +141,69 @@ server <- function(input,output){
              "16"= stheme <- "united",
              "17"= stheme <- "yeti"
       )
-      ui.fluidpage.h <- paste0('\n# ui----\nshinyUI(\nfluidPage(theme = shinytheme("',stheme,'"),')
+      ui.fluidpage.h <- paste0('fluidPage(theme = shinytheme("',stheme,'"),')
     }
     ui.fluidpage.t <- ')\n'
+    
     ui.title <- paste0('titlePanel("',input$title,'"),')
+    
     ui.pagebody.h1 <- 'fluidRow('
-    ui.pagebody.h2 <- 'fluidRow(column(3,wellPanel("SideBar")),\ncolumn(9,fluidRow('
-    ui.pagebody.t1 <- ')\n)'
-    ui.pagebody.t2 <- '))\n)\n)'
+    ui.pagebody.h2 <- 'fluidRow(\ncolumn(3,\nwellPanel("SideBar")),\ncolumn(9,\nfluidRow('
+    ui.pagebody.t1 <- ')'
+    ui.pagebody.t2 <- '))\n)'
+    comma <- ','
     
     # sidebar
-    if(input$sidebar==2){
-      # no
+    if(input$sidebar==2){             # no
       ui.pagebody.h <- ui.pagebody.h1
       ui.pagebody.t <- ui.pagebody.t1
-    } else if(input$sidebar==1){
-      # yes
+    } else if(input$sidebar==1){      # yes
       ui.pagebody.h <- ui.pagebody.h2
       ui.pagebody.t <- ui.pagebody.t2
     }
     
-    # header,sidebar part
-    code.ui <- c(ui.fluidpage.h,         
+    # iutput/outputContentsNumber is selected content-numbers
+    iutputContentsNumber <- as.numeric(input$inputContentsList)
+    outputContentsNumber <- as.numeric(input$ouputContentsList)
+    
+    UIContentsCode # TODO : UIcontentsCodeの内容と、input/outputの連番の内容が一致するように調整必要!!!
+
+    contentNumber <- c(iutputContentsNumber,outputContentsNumber+max(iutputContentsNumber)) # inputとoutputの選択番号を連番に
+
+    tuckCodeIntoColumn4 <- function(code){
+      paste("column(4,\n",code,"\n)")
+    }
+    tuckedCode <- sapply(UIContentsCode$contentsText[contentNumber],tuckCodeIntoColumn4)
+    connectedUIContentsCode <- paste(tuckedCode,collapse=",")
+    
+    # CodeFrame(header,sidebar part)
+    code.ui <- c(shinyUI.head,
+                 ui.fluidpage.h,         
                  ui.title,         
-                 ui.pagebody.h)
-    # select contents
-    contents.n <- 0
+                 ui.pagebody.h,
+                 connectedUIContentsCode,
+                 ui.pagebody.t,
+                 ui.fluidpage.t,
+                 shinyUI.tail)
+    
+    
     # server.code----
-    code.server <- c(server.h)
     
-    # n_con is selected content-numbers
-    n_con <- as.numeric(input$contents_list)
-    n_con2 <- as.numeric(input$contents_list2)
+    # make server.header/tail code----
+    server.h <- '\n# server----\nshinyServer(\nfunction(input, output) { '
+    server.h2 <- '\n# server----\nshinyServer(\nfunction(input, output, session) { '
+    server.t <- '}\n)'
     
-    # textinput
-    if(contents.n==0 & (1 %in% n_con)){
-      code.ui <- c(code.ui,ui.textinput)
-      contents.n <- contents.n+1
-    } else if(contents.n>=1 & (1 %in% n_con)){
-      code.ui <- c(code.ui,comma,ui.textinput)
-      contents.n <- contents.n+1
-    }
-    # radiobutton
-    if(contents.n==0 & (2 %in% n_con)){
-      code.ui <- c(code.ui,ui.radiobutton)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.radiobutton)
-    } else if(contents.n>=1 & (2 %in% n_con)){
-      code.ui <- c(code.ui,comma,ui.radiobutton)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.radiobutton)
-    }
-    # numericinput
-    if(contents.n==0 & (3 %in% n_con)){
-      code.ui <- c(code.ui,ui.numericinput)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.numericinput)
-    } else if(contents.n>=1 & (3 %in% n_con)){
-      code.ui <- c(code.ui,comma,ui.numericinput)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.numericinput)
-    }
-    # sliderinput
-    if(contents.n==0 & (4 %in% n_con)){
-      code.ui <- c(code.ui,ui.sliderinput)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.sliderinput)
-    } else if(contents.n>=1 & (4 %in% n_con)){
-      code.ui <- c(code.ui,comma,ui.sliderinput)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.sliderinput)
-    }
-    # selectinput
-    if(contents.n==0 & (5 %in% n_con)){
-      code.ui <- c(code.ui,ui.selectinput)
-      contents.n <- contents.n+1
-    } else if(contents.n>=1 & (5 %in% n_con)){
-      code.ui <- c(code.ui,comma,ui.selectinput)
-      contents.n <- contents.n+1
+    if(6 %in% inputContentsNumber){
+      server.h <- server.h
+    } else {
+      server.h <- server.h2
     }
     
-    # dateinput
-    if(contents.n==0 & (6 %in% n_con)){
-      code.ui <- c(code.ui,ui.dateinput)
-      contents.n <- contents.n+1
-    } else if(contents.n>=1 & (6 %in% n_con)){
-      code.ui <- c(code.ui,comma,ui.dateinput)
-      contents.n <- contents.n+1
-    }
-    # daterangeinput
-    if(contents.n==0 & (7 %in% n_con)){
-      code.ui <- c(code.ui,ui.daterangeinput)
-      contents.n <- contents.n+1
-    } else if(contents.n>=1 & (7 %in% n_con)){
-      code.ui <- c(code.ui,comma,ui.daterangeinput)
-      contents.n <- contents.n+1
-    }
-    # fileinput
-    if(contents.n==0 & (8 %in% n_con)){
-      code.ui <- c(code.ui,ui.fileinput)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.fileinput)
-    } else if(contents.n>=1 & (8 %in% n_con)){
-      code.ui <- c(code.ui,comma,ui.fileinput)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.fileinput)
-    }
-    # actionbutton
-    if(contents.n==0 & (9 %in% n_con)){
-      code.ui <- c(code.ui,ui.actionbutton)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.actionbutton)
-    } else if(contents.n>=1 & (9 %in% n_con)){
-      code.ui <- c(code.ui,comma,ui.actionbutton)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.actionbutton)
-    }
-    # checkboxGroupInput
-    if(contents.n==0 & (10 %in% n_con)){
-      code.ui <- c(code.ui,ui.checkbox)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.checkbox)
-    } else if(contents.n>=1 & (10 %in% n_con)){
-      code.ui <- c(code.ui,comma,ui.checkbox)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.checkbox)
-    }
+    connectedServerContentsCode <- paste(ServerContentsCode[contentNumber],collapse=",")
+    code.server <- c(server.h,connectedServerContentsCode,server.t)
     
-    # ggplot
-    if(contents.n==0 & (1 %in% n_con2)){
-      code.ui <- c(code.ui,ui.ggplot)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.ggplot)
-    } else if(contents.n>=1 & (1 %in% n_con2)){
-      code.ui <- c(code.ui,comma,ui.ggplot)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.ggplot)
-    }
-    # plotly
-    if(contents.n==0 & (2 %in% n_con2)){
-      code.ui <- c(code.ui,ui.plotly)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.plotly)
-    } else if(contents.n>=1 & (2 %in% n_con2)){
-      code.ui <- c(code.ui,comma,ui.plotly)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.plotly)
-    }
-    # renderImage
-    if(contents.n==0 & (3 %in% n_con2)){
-      code.ui <- c(code.ui,ui.image)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.image)
-    } else if(contents.n>=1 & (3 %in% n_con2)){
-      code.ui <- c(code.ui,comma,ui.image)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.image)
-    }
-    # leaflet
-    if(contents.n==0 & (4 %in% n_con2)){
-      code.ui <- c(code.ui,ui.leaflet)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.leaflet)
-    } else if(contents.n>=1 & (4 %in% n_con2)){
-      code.ui <- c(code.ui,comma,ui.leaflet)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.leaflet)
-    }
-    # click.image
-    if(contents.n==0 & (5 %in% n_con2)){
-      code.ui <- c(code.ui,ui.clickimage)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.clickimage)
-    } else if(contents.n>=1 & (5 %in% n_con2)){
-      code.ui <- c(code.ui,comma,ui.clickimage)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.clickimage)
-    }
-    # click.plot
-    if(contents.n==0 & (6 %in% n_con2)){
-      code.ui <- c(code.ui,ui.clickplot)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.clickplot)
-    } else if(contents.n>=1 & (6 %in% n_con2)){
-      code.ui <- c(code.ui,comma,ui.clickplot)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.clickplot)
-    }
-    # DiagrammeR
-    if(contents.n==0 & (7 %in% n_con2)){
-      code.ui <- c(code.ui,ui.diagram)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.diagram)
-    } else if(contents.n>=1 & (7 %in% n_con2)){
-      code.ui <- c(code.ui,comma,ui.diagram)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.diagram)
-    }
-    # visNetwork
-    if(contents.n==0 & (8 %in% n_con2)){
-      code.ui <- c(code.ui,ui.visnet)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.visnet)
-    } else if(contents.n>=1 & (8 %in% n_con2)){
-      code.ui <- c(code.ui,comma,ui.visnet)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.visnet)
-    }
-    # verbatimTextOutput
-    if(contents.n==0 & (9 %in% n_con2)){
-      code.ui <- c(code.ui,ui.verbatimtext)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.verbatimtext)
-    } else if(contents.n>=1 & (9 %in% n_con2)){
-      code.ui <- c(code.ui,comma,ui.verbatimtext)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.verbatimtext)
-    }
-    # datatable
-    if(contents.n==0 & (10 %in% n_con2)){
-      code.ui <- c(code.ui,ui.datatable)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.datatable)
-    } else if(contents.n>=1 & (10 %in% n_con2)){
-      code.ui <- c(code.ui,comma,ui.datatable)
-      contents.n <- contents.n+1
-      code.server <- c(code.server,server.datatable)
-    }
-    
-    # tab
-    if(contents.n==0 & (input$tab==1)){
-      code.ui <- c(code.ui,ui.tab)
-      contents.n <- contents.n+1
-    } else if(contents.n>=1 & (input$tab==1)){
-      code.ui <- c(code.ui,comma,ui.tab)
-      contents.n <- contents.n+1
-    }
-    
-    # tail
-    code.ui <- c(code.ui,ui.pagebody.t,ui.fluidpage.t)
-    code.ui
-    code.server <- c(code.server,server.t)
+
     
     # make whole code----
     # record shiny execute file---
@@ -416,9 +211,9 @@ server <- function(input,output){
     if(!("sample" %in% list.files(getwd()))){
       dir.create(paste0(getwd(),"/sample"))
     }
-    code.UI <- c(codelib,code.ui)
+    code.UI <- c(libraryCode[1:3],code.ui)
     write(code.UI,file = "sample/ui.R")
-    code.server <- c(codelib,code.server)
+    code.server <- c(libraryCode,code.server)
     write(code.server,file = "sample/server.R")
     text <- 'Shiny_code was created. '
   })
@@ -432,7 +227,7 @@ server <- function(input,output){
     input$confirm_code
     if("ui.R" %in% list.files(paste0(getwd(),"/sample"))){
       uicode <- readLines("sample/ui.R")
-      unicode <- paste(uicode, collapse = "\n")
+      uicode <- paste(uicode, collapse = "\n")
     } else {
       uicode <- "File does not exist"
     }
