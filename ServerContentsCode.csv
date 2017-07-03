@@ -1,18 +1,10 @@
 "contentsName","contentsText"
-"server.checkbox","output$txt <- renderText({
-icons <- paste(input$icons,collapse = "", "");paste(""You chose"", icons)
-})"
-"server.fileinput","output$contents <- renderTable({
-inFile <- input$file1
-if (is.null(inFile))
-return(NULL)
-read.csv(inFile$datapath, header = input$header)
+"server.textinput",""
+"server.radiobutton"," output$txt2 <- renderText({
+paste(""You chose"", input$rb)
 })"
 "server.numericinput","output$value <- renderText({
 input$obs1 
-})"
-"server.radiobutton"," output$txt2 <- renderText({
-paste(""You chose"", input$rb)
 })"
 "server.sliderinput","output$distPlot <- renderPlot({
 hist(rnorm(input$obs))
@@ -20,11 +12,22 @@ hist(rnorm(input$obs))
 "server.selectinput"," output$result <- renderText({
 paste(""You chose"", input$state)
 })"
+"server.dateinput",""
+"server.daterangeinput",""
+"server.fileinput","output$contents <- renderTable({
+inFile <- input$file1
+if (is.null(inFile))
+return(NULL)
+read.csv(inFile$datapath, header = input$header)
+})"
 "server.actionbutton","comment_save <- eventReactive(input$save,{
 cat(""saveButton was pushed""
 )})
 output$comment_button <- renderText({
 comment_save()
+})"
+"server.checkboxgroupinput","output$txt <- renderText({
+icons <- paste(input$icons,collapse = "", "");paste(""You chose"", icons)
 })"
 "server.ggplot","output$ggplot <- renderPlot({
 ggplot(iris,aes(Sepal.Width,Sepal.Length))+geom_point()
