@@ -103,7 +103,7 @@ server <- function(input,output,session){
     
     # ui.part of shiny.code----
     shinyUI.head <- '\n# ui----\nshinyUI('
-    shinyUI.tail <- '\n)'
+    shinyUI.tail <- ')'
     
     if(input$theme==1){
       ui.fluidpage.h <- 'fluidPage('
@@ -129,7 +129,7 @@ server <- function(input,output,session){
       )
       ui.fluidpage.h <- paste0('fluidPage(theme = shinytheme("',stheme,'"),')
     }
-    ui.fluidpage.t <- ')\n'
+    ui.fluidpage.t <- ')'
     
     ui.title <- paste0('titlePanel("',input$title,'"),')
     

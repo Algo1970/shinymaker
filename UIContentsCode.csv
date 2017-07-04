@@ -21,13 +21,13 @@ choiceValues=list(""calendar"",""bed"")),
 textOutput(""txt"")"
 "ui.ggplot","plotOutput(""ggplot"",height=200)"
 "ui.plotly","plotlyOutput(""plotly"")"
-"ui.image","imageOutput(""myImages"")"
-"ui.leaflet","leafletOutput(""mymap"")"
-"ui.clickimage","imageOutput(""myImage"",click = ""image_click""),
-verbatimTextOutput(""info"")"
+"ui.image","imageOutput(""imageoutput"")"
+"ui.leaflet","leafletOutput(""mapLeaflet"")"
+"ui.clickimage","imageOutput(""clickImage"",click = ""image_click""),
+verbatimTextOutput(""infoClickXY"")"
 "ui.clickplot","plotOutput(""plot1"",click =""plot_click""),
 verbatimTextOutput(""info2"")"
 "ui.diagram","grVizOutput(""diagram"",width =""100%"",height=""300px"")"
-"ui.visnet","visNetworkOutput(""network"")"
+"ui.visnet","visNetworkOutput(""visnetwork"")"
 "ui.verbatimtext","verbatimTextOutput(""verba_text"")"
 "ui.datatable","dataTableOutput(""DT1"")"
