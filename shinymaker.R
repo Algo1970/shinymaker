@@ -1,4 +1,4 @@
-# shinymaker
+# ShinyMaker
 
 # LIBRARY----
 library(shiny)
@@ -83,25 +83,9 @@ ui <- fluidPage(shinythemes::themeSelector(),
                 )
 )
 
-# UI/SERVEER contents data----
-# ui.contents----
-# substituteUItext <- function(objectName,codeText){
-#   substituteText <- paste0(objectName,"<<-'column(4,\n",codeText,"\n)'")
-#   eval(parse(text = substituteText))
-# }
+# UI/SERVEER.contents.code data----
 UIContentsCode <- read.csv("UIContentsCode.csv", header = T,stringsAsFactors = F)
-UIContentsCode[11,]
-# mapply(substituteUItext,UIContentsCode$contentsName,UIContentsCode$contentsText)
-
-# server.contents----
-# substituteServertext <- function(objectName,codeText){
-#   substituteText <- paste0(objectName,"<<-'",codeText,"\n)'")
-#   eval(parse(text = substituteText))
-# }
 ServerContentsCode <- read.csv("ServerContentsCode.csv", header = T,stringsAsFactors = F)
-ServerContentsCode[,2]
-# mapply(substituteServertext,ServerContentsCode$contentsName,ServerContentsCode$contentsText)
-
 
 # SERVER----
 server <- function(input,output,session){
@@ -150,9 +134,9 @@ server <- function(input,output,session){
     ui.title <- paste0('titlePanel("',input$title,'"),')
     
     ui.pagebody.h1 <- 'fluidRow('
-    ui.pagebody.h2 <- 'fluidRow(\ncolumn(3,\nwellPanel("SideBar")),\ncolumn(9,\nfluidRow('
+    ui.pagebody.h2 <- 'fluidRow(\ncolumn(3,\nwellPanel("SideBar")\n),\ncolumn(9,\nfluidRow('
     ui.pagebody.t1 <- ')'
-    ui.pagebody.t2 <- '))\n)'
+    ui.pagebody.t2 <- ')\n)\n)'
     comma <- ','
     
     # sidebar
@@ -167,9 +151,6 @@ server <- function(input,output,session){
     # iutput/outputContentsNumber is selected content-numbers
     inputContentsNumber <- as.numeric(input$inputContentsList)
     outputContentsNumber <- as.numeric(input$ouputContentsList)
-    
-    UIContentsCode # TODO : UIcontentsCodeの内容と、input/outputの連番の内容が一致するように調整必要!!!
-
     contentNumber <- c(inputContentsNumber,outputContentsNumber+max(inputContents$number)) # inputとoutputの選択番号を連番に
 
     tuckCodeIntoColumn4 <- function(code){
@@ -177,7 +158,7 @@ server <- function(input,output,session){
     }
     tuckedCode <- sapply(UIContentsCode$contentsText[contentNumber],tuckCodeIntoColumn4)
     tuckedCode <- tuckedCode[!(tuckedCode=="")] 
-    connectedUIContentsCode <- paste(tuckedCode,collapse=",")
+    connectedUIContentsCode <- paste(tuckedCode,collapse=",\n")
     
     # CodeFrame(header,sidebar part)
     code.ui <- c(shinyUI.head,
@@ -190,44 +171,38 @@ server <- function(input,output,session){
                  shinyUI.tail)
     
     
-    # server.code----
+    # server.part of shiny.code----
     
     # make server.header/tail code----
     server.h <- '\n# server----\nshinyServer(\nfunction(input, output) { '
     server.h2 <- '\n# server----\nshinyServer(\nfunction(input, output, session) { '
     server.t <- '}\n)'
     
-    if(9 %in% inputContentsNumber){
-      server.h <- server.h
-    } else {
+    if(9 %in% inputContentsNumber){ 　# actionボタン使うときはsession入れる
       server.h <- server.h2
+    } else {
+      server.h <- server.h
     }
     
-    # connectedServerContentsCode <- paste(ServerContentsCode[contentNumber],collapse=",")
-    # ServerContentsCode %>% tail()
-    # 空白ベクトルを削除しないと、先頭が","だったり、",,"のように","が続くことあり
+    # 空白ベクトルを削除しないと、ServerCodeの先頭が","だったり、",,"のように","が続くことあり
     ServerContentsCode_withBlanck<- ServerContentsCode$contentsText[contentNumber]
     ServerContentsCode_withoutBlanck <- ServerContentsCode_withBlanck[!(ServerContentsCode_withBlanck=="")]  
     connectedServerContentsCode <- paste(ServerContentsCode_withoutBlanck,collapse="\n")
     code.server <- c(server.h,connectedServerContentsCode,server.t)
     
-
-    
     # make whole code----
     # record shiny execute file---
-    
     if(!("sample" %in% list.files(getwd()))){
       dir.create(paste0(getwd(),"/sample"))
     }
-    code.UI <- c(libraryCode[1:3],code.ui)
-    write(code.UI,file = "sample/ui.R")
+    uiCode <- c(libraryCode,code.ui)
+    write(uiCode,file = "sample/ui.R")
     code.server <- c(libraryCode,code.server)
     write(code.server,file = "sample/server.R")
     text <- 'Shiny_code was created. '
     
     ### error.check----
-    # error.check <- as.numeric(input$inputContentsList)
-    error.check <- paste(contentNumber,connectedServerContentsCode)
+    # error.check <- contentNumber
     
   })
   output$comment1 <- renderText({

@@ -45,3 +45,9 @@ data <- data.frame(contentsName=name,contentsText=text)
 data[1,]
 data[,2]
 write.csv(data,file = "UIContentsCode.csv", row.names=FALSE)
+
+
+ServerContentsCode <- read.csv("ServerContentsCode.csv", header = T,stringsAsFactors = F)
+ServerContentsCode$contentsName
+test <- ServerContentsCode$contentsText[17]
+test <- "output$diagram <- renderGrViz({\nnodes <-create_nodes(nodes = 1:3)\nedges <-create_edges(from = 1:3,to = c(2,3,1))\ngraph <-create_graph(nodes_df = nodes,edges_df = edges)\ngrViz({graph$dot_code})})"
