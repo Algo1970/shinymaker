@@ -1,33 +1,33 @@
 "contentsName","contentsText"
 "server.textinput",""
-"server.radiobutton"," output$txt2 <- renderText({
-paste(""You chose"", input$rb)
+"server.radiobutton"," output$selected_radiobutton <- renderText({
+paste(""You chose"", input$radiobutton)
 })"
-"server.numericinput","output$value <- renderText({
-input$obs1 
+"server.numericinput","output$numericInputText <- renderText({
+input$numeric_input
 })"
 "server.sliderinput","output$distPlot <- renderPlot({
-hist(rnorm(input$obs))
+hist(rnorm(input$slider_input))
 })"
-"server.selectinput"," output$result <- renderText({
-paste(""You chose"", input$state)
+"server.selectinput"," output$selectInputText <- renderText({
+paste(""You chose"", input$select_input)
 })"
 "server.dateinput",""
 "server.daterangeinput",""
-"server.fileinput","output$contents <- renderTable({
-inFile <- input$file1
+"server.fileinput","output$fileContents <- renderTable({
+inFile <- input$file_input1
 if (is.null(inFile))
 return(NULL)
 read.csv(inFile$datapath, header = input$header)
 })"
-"server.actionbutton","comment_save <- eventReactive(input$save,{
+"server.actionbutton","comment_save <- eventReactive(input$action_button,{
 cat(""saveButton was pushed""
 )})
-output$comment_button <- renderText({
+output$comment_actionButton <- renderText({
 comment_save()
 })"
 "server.checkboxgroupinput","output$txt <- renderText({
-icons <- paste(input$icons,collapse = "", "");paste(""You chose"", icons)
+icons <- paste(input$checkbox_group_input,collapse = "", "");paste(""You chose"", icons)
 })"
 "server.ggplot","output$ggplot <- renderPlot({
 ggplot(iris,aes(Sepal.Width,Sepal.Length))+geom_point()
@@ -46,13 +46,13 @@ addMiniMap(tiles = providers$Esri.WorldStreetMap,toggleDisplay = TRUE))"
 "server.clickimage","output$clickImage <- renderImage({
         list(src = ""../ebimiso2.jpg"",width = 400)
     }, deleteFile = FALSE)
-    output$infoClickXY <- renderText({
+    output$infoClickImageXY <- renderText({
       paste0(""x="",input$image_click$x,""y="",input$image_click$y)
     })"
-"server.clickplot","output$plot1 <- renderPlot({
+"server.clickplot","output$clickPlot <- renderPlot({
 ggplot(iris,aes(Sepal.Width,Sepal.Length))+geom_point()
 })
-output$info2 <- renderText({
+output$infoClickPlotXY <- renderText({
 paste0(""x="", input$plot_click$x, ""
 y="", input$plot_click$y)
 })"
@@ -68,5 +68,5 @@ visNetwork(nodes, edges)})"
 "server.verbatimtext","output$verba_text <- renderText({
 text <- ""sample text""
 })"
-"server.datatable","output$DT1 <- renderDataTable({
+"server.datatable","output$DataTable <- renderDataTable({
 head(iris[,c(1,2)],3) },options = list(pageLength = 5,searching = T))"

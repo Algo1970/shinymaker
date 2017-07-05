@@ -1,21 +1,20 @@
 "contentsName","contentsText"
 "ui.textinput","textInput(""title"", label=""title"",value="""")"
-"ui.radiobutton","radioButtons(""rb"", ""Choose one:"", c(""A"" = ""1"",""B"" = ""2"",""C"" = ""3"")
-),
-textOutput(""txt2"")"
-"ui.numericinput","numericInput(""obs1"", ""Obs:"", 10, min = 1, max = 100),
-verbatimTextOutput(""value"")"
-"ui.sliderinput","sliderInput(""obs"", ""Number of observations:"",min = 0, max = 1000, value = 500),
+"ui.radiobutton","radioButtons(""radiobutton"", ""Choose one:"", c(""A"" = ""1"",""B"" = ""2"",""C"" = ""3"")),
+textOutput(""selected_radiobutton"")"
+"ui.numericinput","numericInput(""numeric_input"", ""Input number:"", 10, min = 1, max = 100),
+verbatimTextOutput(""numericInputText"")"
+"ui.sliderinput","sliderInput(""slider_input"", ""Number of observations:"",min = 0, max = 1000, value = 500),
 plotOutput(""distPlot"",height = 150)"
-"ui.selectinput","selectInput(""moji"",""Choose:"",list(`group1`=c(""A"",""B"",""C""),`group2`=c(""D"",""E"",""F""))),
-textOutput(""result"")"
-"ui.dateinput","dateInput(""date2"", ""Date:"")"
-"ui.daterangeinput","dateRangeInput(""daterange4"", ""Date range:"",start = Sys.Date()-10,end = Sys.Date()+10)"
-"ui.fileinput","fileInput(""file"",label = ""Input File:""),
-tableOutput(""contents"")"
-"ui.actionbutton","actionButton(""save"",""save data""),
-verbatimTextOutput(""comment_button"")"
-"ui.checkbox","checkboxGroupInput(""icons"", ""Choose icons:"",
+"ui.selectinput","selectInput(""select_input"",""Select :"",list(""letters""=c(""A"",""B"",""C""))),
+textOutput(""selectInputText"")"
+"ui.dateinput","dateInput(""date_input"", ""Date:"")"
+"ui.daterangeinput","dateRangeInput(""daterange_input"", ""Date range:"",start = Sys.Date()-10,end = Sys.Date()+10)"
+"ui.fileinput","fileInput(""file_input"",label = ""Input File:""),
+tableOutput(""fileContents"")"
+"ui.actionbutton","actionButton(""action_button"",""save data""),
+verbatimTextOutput(""comment_actionButton"")"
+"ui.checkbox","checkboxGroupInput(""checkbox_group_input"", ""Choose icons:"",
 choiceNames=list(icon(""calendar""),icon(""bed"")),
 choiceValues=list(""calendar"",""bed"")),
 textOutput(""txt"")"
@@ -24,10 +23,10 @@ textOutput(""txt"")"
 "ui.image","imageOutput(""imageoutput"")"
 "ui.leaflet","leafletOutput(""mapLeaflet"")"
 "ui.clickimage","imageOutput(""clickImage"",click = ""image_click""),
-verbatimTextOutput(""infoClickXY"")"
-"ui.clickplot","plotOutput(""plot1"",click =""plot_click""),
-verbatimTextOutput(""info2"")"
+verbatimTextOutput(""infoClickImageXY"")"
+"ui.clickplot","plotOutput(""clickPlot"",click =""plot_click""),
+verbatimTextOutput(""infoClickPlotXY"")"
 "ui.diagram","grVizOutput(""diagram"",width =""100%"",height=""300px"")"
 "ui.visnet","visNetworkOutput(""visnetwork"")"
 "ui.verbatimtext","verbatimTextOutput(""verba_text"")"
-"ui.datatable","dataTableOutput(""DT1"")"
+"ui.datatable","dataTableOutput(""DataTable"")"
