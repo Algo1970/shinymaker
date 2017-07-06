@@ -6,23 +6,17 @@ library(shinythemes)
 library(dplyr)
 
 # library.list----
-# libraryList <- read.csv("libraryList.csv", header = T) %>% as.list() 
-# save(libraryList,file = "libraryList.rdata")
 load("libraryList.rdata")
 names(libraryList$number) <- libraryList$libraryName
 libraryChoices <- libraryList$number %>% as.list()
 
 # inputContents.list----
-# inputContents <- read.csv("inputContents.csv", header = T) %>% as.list() 
-# save(inputContents,file = "inputContents.rdata")
 load("inputContents.rdata")
 inputContents
 names(inputContents$number) <- inputContents$contents
 inputContentsChoices <- inputContents$number %>% as.list()
 
 # outputContents.list----
-# outputContents <- read.csv("outputContents.csv", header = T) %>% as.list() 
-# save(outputContents,file = "outputContents.rdata")
 load("outputContents.rdata")
 outputContents
 names(outputContents$number) <- outputContents$contents
@@ -92,16 +86,8 @@ ui <- fluidPage(shinythemes::themeSelector(),
 )
 
 # UI/SERVEER.contents.code data----
-
-# UIContentsCode <- read.csv("UIContentsCode.csv", header = T,stringsAsFactors = F)
-# save(UIContentsCode,file = "UIContentsCode.rdata")
 load("UIContentsCode.rdata")
-UIContentsCode
-
-# ServerContentsCode <- read.csv("ServerContentsCode.csv", header = T,stringsAsFactors = F)
-# save(ServerContentsCode,file = "ServerContentsCode.rdata")
 load("ServerContentsCode.rdata")
-ServerContentsCode
 
 # SERVER----
 server <- function(input,output,session){
@@ -176,6 +162,12 @@ server <- function(input,output,session){
     tuckedCode <- tuckedCode[!(tuckedCode=="")] 
     connectedUIContentsCode <- paste(tuckedCode,collapse=",\n")
     
+    # add tab
+    if(input$tab==1){   
+      tab.code <- 'column(4,\ntabsetPanel(\ntabPanel("tabA",\nh3("testA")\n),\ntabPanel("tabB",\nh3("testB")\n)\n)\n),'
+      connectedUIContentsCode <- c(tab.code,connectedUIContentsCode)
+    }
+    
     # CodeFrame(header,sidebar part)
     code.ui <- c(shinyUI.head,
                  ui.fluidpage.h,         
@@ -200,7 +192,7 @@ server <- function(input,output,session){
       server.h <- server.h
     }
     
-    # 空白ベクトルを削除しないと、ServerCodeの先頭が","だったり、",,"のように","が続くことあり
+    # 空白ベクトルを削除
     ServerContentsCode_withBlanck<- ServerContentsCode$contentsText[contentNumber]
     ServerContentsCode_withoutBlanck <- ServerContentsCode_withBlanck[!(ServerContentsCode_withBlanck=="")]  
     connectedServerContentsCode <- paste(ServerContentsCode_withoutBlanck,collapse="\n")
