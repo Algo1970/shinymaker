@@ -45,7 +45,7 @@ git clone https://github.com/Algo1970/shinymaker.git
 
 <img src="image/shiny_sampleFiles.png"  width="500" >
 
-8. どのようなコードが作成されたかは、display codeボタンを押すと、タブ内にコードが表示されます。
+8. どのようなコードが作成されたか確認してみましょう。display codeボタンを押すと、タブ内にコードが表示されます。
 
 <img src="image/shinymakerCodeDisplay.png"  width="600" >
 
