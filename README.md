@@ -8,7 +8,7 @@
 
 - gitを使用していない場合は、zipファイルをダウンロードして使用してください。
 
-<img src="image/shinymakerZIPfile.png"  width="500" >
+<img src="image/shinymakerZIPfile.png"  width="600" >
 
 - gitを使用している場合は、下記でgit cloneして使用して下さい。
 
@@ -22,7 +22,7 @@ git clone https://github.com/Algo1970/shinymaker.git
 次にshinymaker.Rを実行します。shinymaker.R自体がshinyアプリですので、Run Appボタンを押して実行して下さい。
 下記画面が表示されれば、OKです。
 
-<img src="image/shinymakerTop.png"  width="500" >
+<img src="image/shinymakerTop.png"  width="600" >
 
 2. 必要があればtitile名を入力し、Sidebar、Tabの有無にチェックを付けて下さい。
 
@@ -47,7 +47,7 @@ git clone https://github.com/Algo1970/shinymaker.git
 
 8. どのようなコードが作成されたかは、display codeボタンを押すと、タブ内にコードが表示されます。
 
-<img src="image/shinymakerCodeDisplay.png"  width="500" >
+<img src="image/shinymakerCodeDisplay.png"  width="600" >
 
 
 作成されたコードはインデントが調整されておりませんので、Rstudioのショートカット(ctrl+A  →　ctrl+I)でインデントを付けてデバッグ等行うと良いと思います。
@@ -62,12 +62,18 @@ git clone https://github.com/Algo1970/shinymaker.git
 
 <img src="image/shinycodeIndent3.png"  width="500" >
 
+
 9. 作成されたshinyアプリを実行してみましょう。
 
 <img src="image/shinyRunApp.png"  width="500" >
 
+RunAppボタンを押して実行します。
+
 <img src="image/shinyShowNewWindow.png"  width="500" >
 
+Viewer内に表示されたら、Show in New Windowボタンを押してください。
+
+Webブラウザで立ち上がりました。
 これができあがったshinyアプリです。
 
 <img src="image/sampleShiny.png"  width="500" >
