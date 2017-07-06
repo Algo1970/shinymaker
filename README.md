@@ -65,18 +65,18 @@ git clone https://github.com/Algo1970/shinymaker.git
 
 9. 作成されたshinyアプリを実行してみましょう。
 
-<img src="image/shinyRunApp.png"  width="600" >
+<img src="image/shinyRunApp.png"  width="500" >
 
 RunAppボタンを押して実行します。
 
-<img src="image/shinyShowNewWindow.png"  width="600" >
+<img src="image/shinyShowNewWindow.png"  width="500" >
 
 Viewer内に表示されたら、Show in New Windowボタンを押してください。
 
 Webブラウザで立ち上がりました。
 これができあがったshinyアプリです。
 
-<img src="image/sampleShiny.png"  width="600" >
+<img src="image/sampleShiny.png"  width="500" >
 
 shinyアプリのパーツが並んでいるので、コードを少し変更するだけでアプリを仕上げることができます。
 アプリ作成時間が、かなり短縮できると思いますので試してみて下さい。
