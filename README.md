@@ -69,6 +69,7 @@ git clone https://github.com/Algo1970/shinymaker.git
 
 RunAppボタンを押して実行します。
 
+
 <img src="image/shinyShowNewWindow.png"  width="500" >
 
 Viewer内に表示されたら、Show in New Windowボタンを押してください。
