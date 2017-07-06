@@ -78,7 +78,8 @@ Viewer内に表示されたら、Show in New Windowボタンを押してくだ�
 Webブラウザで立ち上がりました。
 これができあがったshinyアプリです。
 
-<img src="image/sampleShiny.png"  width="500" >
+<img src="image/sampleShiny.png"  width="600" >
+
 
 shinyアプリのパーツが並んでいるので、コードを少し変更するだけでアプリを仕上げることができます。
 アプリ作成時間が、かなり短縮できると思いますので試してみて下さい。
