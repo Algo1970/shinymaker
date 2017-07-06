@@ -65,8 +65,8 @@ git clone https://github.com/Algo1970/shinymaker.git
 
 9. 作成されたshinyアプリを実行してみましょう。
 
-<img src="image/shinyRunApp.png"  width="600" >
-<img src="image/shinymakerTop.png"  width="600" >
+
+<img src="image/shinyRunApp.png"  width="600" >
 
 RunAppボタンを押して実行します。
 
