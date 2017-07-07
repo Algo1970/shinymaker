@@ -6,15 +6,10 @@
 
 ### ダウンロード 
 
-- gitを使用していない場合は、zipファイルをダウンロードして使用してください。
+- zipファイルをダウンロードして使用してください。
 
 <img src="image/shinymakerZIPfile.png"  width="600" >
 
-- gitを使用している場合は、下記でgit cloneして使用して下さい。
-
-```
-git clone https://github.com/Algo1970/shinymaker.git
-```
 
 ### 使用法 
 
@@ -50,7 +45,7 @@ git clone https://github.com/Algo1970/shinymaker.git
 <img src="image/shinymakerCodeDisplay.png"  width="600" >
 
 
-作成されたコードはインデントが調整されておりませんので、Rstudioのショートカット(ctrl+A  →　ctrl+I)でインデントを付けてデバッグ等行うと良いと思います。
+作成されたコードはインデントが調整されておりませんので、Rstudioのショートカット(ctrl+A  →　ctrl+I)でインデントを付けて、コードの修正等行うと良いと思います。
 
 <img src="image/shinycodeIndent1.png"  width="500" >
 
